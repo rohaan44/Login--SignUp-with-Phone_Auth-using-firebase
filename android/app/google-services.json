@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "610148525403",
+    "project_id": "sirusman-c5809",
+    "storage_bucket": "sirusman-c5809.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:610148525403:android:3b3d2d10eb3d79a93c267e",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7f8otsraVas7d4owyWd1APrq3mgvVnKI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
