@@ -1,3 +1,4 @@
+import 'package:app/auth/login_with_phone.dart';
 import 'package:app/auth/signup.dart';
 import 'package:app/components/components.dart';
 import 'package:app/postscreen/postscreen.dart';
@@ -127,7 +128,18 @@ class _LoginState extends State<Login> {
                     child: const Text("Sign Up"))
               ],
             ),
-          )
+          ),
+          RoundButton(
+            Loading: Loading,
+            Onpress: (){
+            setState(() {
+              Loading= true;
+            });
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const LoginWithPhone()));
+            setState(() {
+              Loading= false;
+            });
+          }, title:const Text("Login With Phone",style: TextStyle(color: Colors.white),))
         ],
       ),
     );
