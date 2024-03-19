@@ -59,7 +59,7 @@ class _PostScreenState extends State<PostScreen> {
                   if (!snapshot.hasData ||
                       snapshot.data == null ||
                       snapshot.data!.snapshot.value == null) {
-                    return  Center(
+                    return Center(
                       child: Container(
                         width: 100,
                         child: CircularProgressIndicator(
@@ -75,28 +75,32 @@ class _PostScreenState extends State<PostScreen> {
                     return ListView.builder(
                       itemCount: list.length,
                       itemBuilder: (context, index) {
+                        final title = list[index]['title'];
+                        final id = list[index]['ID'];
                         return ListTile(
-                          title: Text(list[index]['title'] ?? ''),
-                          subtitle: Text(list[index]['ID'] ?? ''),
+                          title: Text(title ?? ''),
+                          subtitle: Text(id ?? ''),
                           trailing: PopupMenuButton(
                             itemBuilder: (context) {
                               return [
                                 PopupMenuItem(
-                                    child: ListTile(
-                                  leading:const Icon(Icons.edit),
-                                  title:const Text("Edit"),
-                                  onTap: (){
-
-                                  },
-                                )),
+                                  child: ListTile(
+                                    leading: const Icon(Icons.edit),
+                                    title: const Text("Edit"),
+                                    onTap: () {},
+                                  ),
+                                ),
                                 PopupMenuItem(
-                                    child: ListTile(
-                                  leading: const Icon(Icons.delete),
-                                  title:const Text("Delete"),
-                                  onTap: (){
-
-                                  },
-                                ))
+                                  child: ListTile(
+                                    leading: const Icon(Icons.delete),
+                                    title: const Text("Delete"),
+                                    onTap: () {
+                                      databaseRef
+                                          .child(list[index]['ID'])
+                                          .remove();
+                                    },
+                                  ),
+                                ),
                               ];
                             },
                           ),
@@ -110,9 +114,4 @@ class _PostScreenState extends State<PostScreen> {
           ]),
     );
   }
-
-
-
-
-
 }
