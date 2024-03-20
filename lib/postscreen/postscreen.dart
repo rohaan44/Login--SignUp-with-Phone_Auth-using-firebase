@@ -2,10 +2,8 @@ import 'package:app/auth/login.dart';
 import 'package:app/postscreen/add_post.dart';
 import 'package:app/utils/utils.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/widgets.dart';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
@@ -17,6 +15,7 @@ class PostScreen extends StatefulWidget {
 class _PostScreenState extends State<PostScreen> {
   final databaseRef = FirebaseDatabase.instance.ref('Post');
   FirebaseAuth auth = FirebaseAuth.instance;
+  final editController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,15 +25,15 @@ class _PostScreenState extends State<PostScreen> {
           Navigator.push(context,
               MaterialPageRoute(builder: ((context) => const AddPostScreen())));
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       appBar: AppBar(
         actions: [
           IconButton(
               onPressed: () {
                 auth.signOut();
-                Navigator.pop(
-                    context, MaterialPageRoute(builder: (context) => Login()));
+                Navigator.pop(context,
+                    MaterialPageRoute(builder: (context) => const Login()));
               },
               icon: const Icon(
                 Icons.power_settings_new,
@@ -61,8 +60,8 @@ class _PostScreenState extends State<PostScreen> {
                       snapshot.data!.snapshot.value == null) {
                     return Center(
                       child: Container(
-                        width: 100,
-                        child: CircularProgressIndicator(
+                        width: 30,
+                        child: const CircularProgressIndicator(
                           strokeWidth: 2,
                           color: Colors.deepPurple,
                         ),
@@ -86,8 +85,11 @@ class _PostScreenState extends State<PostScreen> {
                                 PopupMenuItem(
                                   child: ListTile(
                                     leading: const Icon(Icons.edit),
-                                    title: const Text("Edit"),
-                                    onTap: () {},
+                                    title: const Text("Update"),
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      showMyDialog(title, id);
+                                    },
                                   ),
                                 ),
                                 PopupMenuItem(
@@ -95,6 +97,7 @@ class _PostScreenState extends State<PostScreen> {
                                     leading: const Icon(Icons.delete),
                                     title: const Text("Delete"),
                                     onTap: () {
+                                      Navigator.pop(context);
                                       databaseRef
                                           .child(list[index]['ID'])
                                           .remove();
@@ -113,5 +116,40 @@ class _PostScreenState extends State<PostScreen> {
             )
           ]),
     );
+  }
+
+  Future<void> showMyDialog(String title, String ID) async {
+    editController.text = title;
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: TextField(
+              controller: editController,
+              decoration: const InputDecoration(
+                hintText: "Edit",
+                prefixIcon: Icon(Icons.edit),
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Cancel')),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    databaseRef.child(ID).update(
+                        {'ID': ID, 'title': editController.text}).then((value) {
+                      Utils().toast("Post Updated");
+                    }).onError((error, stackTrace) {
+                      Utils().toast(error.toString());
+                    });
+                  },
+                  child: Text('Update'))
+            ],
+          );
+        });
   }
 }

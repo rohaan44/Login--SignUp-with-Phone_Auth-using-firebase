@@ -1,4 +1,6 @@
 import 'package:app/components/components.dart';
+import 'package:app/postscreen/postscreen.dart';
+import 'package:app/utils/utils.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -44,16 +46,24 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     setState(() {
                       loading = true;
                     });
-                    final id = DateTime.now().millisecondsSinceEpoch.toString();
+                    String id =
+                        DateTime.now().millisecondsSinceEpoch.toString();
+
+                    setState(() {
+                      loading = false;
+                    });
                     databaseRef
                         .child(id)
-                        .set({'ID': id,
-                          'title': postController.text.toString()});
-                  setState(() {
-                    loading=false;
-                  });
+                        .set(
+                            {'ID': id, 'title': postController.text.toString()})
+                        .then((value) => Utils().toast("Post Uploaded"))
+                        .then((value) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const PostScreen()));
+                        });
                   },
-                
                   title: const Text(
                     "Add Post",
                     style: TextStyle(color: Colors.white),

@@ -31,54 +31,58 @@ class _LoginWithPhoneState extends State<LoginWithPhone> {
           const SizedBox(
             height: 50,
           ),
-          Container(
-            width: 300,
-            child: TextFormField(
-              keyboardType: TextInputType.number,
-              controller: phoneNumberController,
-              decoration: const InputDecoration(
-                hintText: "+92-3213955205",
+          Center(
+            child: Container(
+              width: 300,
+              child: TextFormField(
+                keyboardType: TextInputType.number,
+                controller: phoneNumberController,
+                decoration: const InputDecoration(
+                  hintText: "+92-3213955205",
+                ),
               ),
             ),
           ),
           const SizedBox(
             height: 50,
           ),
-          RoundButton(
-              Loading: loading,
-              Onpress: () {
-                setState(() {
-                  loading = true;
-                });
-                auth.verifyPhoneNumber(
-                    verificationCompleted: (_) {
-                      setState(() {
-                        loading = false;
+          Center(
+            child: RoundButton(
+                Loading: loading,
+                Onpress: () {
+                  setState(() {
+                    loading = true;
+                  });
+                  auth.verifyPhoneNumber(
+                      verificationCompleted: (_) {
+                        setState(() {
+                          loading = false;
+                        });
+                      },
+                      phoneNumber: phoneNumberController.text.toString(),
+                      
+                      verificationFailed: (e) {
+                        Utils().toast(e.toString());
+                        setState(() {
+                          loading=false;
+                        });
+                      },
+                      codeSent: (String VerificationID, int? token) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: ((context) => VerifyWithPhone(
+                                    VerificationID: VerificationID))));
+                                    setState(() {
+                                      loading=false;
+                                    });
+                      },
+                      codeAutoRetrievalTimeout: (e) {
+                        Utils().toast(e.toString());
                       });
-                    },
-                    phoneNumber: phoneNumberController.text.toString(),
-                    
-                    verificationFailed: (e) {
-                      Utils().toast(e.toString());
-                      setState(() {
-                        loading=false;
-                      });
-                    },
-                    codeSent: (String VerificationID, int? token) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: ((context) => VerifyWithPhone(
-                                  VerificationID: VerificationID))));
-                                  setState(() {
-                                    loading=false;
-                                  });
-                    },
-                    codeAutoRetrievalTimeout: (e) {
-                      Utils().toast(e.toString());
-                    });
-              },
-              title: const Text("Verify"))
+                },
+                title: const Text("Verify",style: TextStyle(color: Colors.white)),
+          ))
         ],
       ),
     );

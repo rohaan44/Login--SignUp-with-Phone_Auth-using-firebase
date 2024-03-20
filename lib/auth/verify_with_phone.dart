@@ -32,42 +32,47 @@ class _VerifyWithPhoneState extends State<VerifyWithPhone> {
           const SizedBox(
             height: 50,
           ),
-          Container(
-            width: 300,
-            child: TextFormField(
-              
-              keyboardType: TextInputType.number,
-              controller: phoneNumberController,
-              decoration: const InputDecoration(
-                hintText: "Write 6 Digit Code",
+          Center(
+            child: Container(
+              width: 300,
+              child: TextFormField(
+                
+                keyboardType: TextInputType.number,
+                controller: phoneNumberController,
+                decoration: const InputDecoration(
+                  hintText: "Write 6 Digit Code",
+                ),
               ),
             ),
           ),
           const SizedBox(
             height: 50,
           ),
-          RoundButton(
-              Loading: loading,
-              Onpress: () async{
-                setState(() {
-                  loading=true;
-                });
-                final credential = PhoneAuthProvider.credential(verificationId: widget.VerificationID, smsCode: phoneNumberController.text.toString());
-              try {
-                setState(() {
-                  loading = false;
-                });
-                await auth.signInWithCredential(credential);
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>const PostScreen()));
-                
-              } catch (e) {
-               setState(() {
-                 loading= false;
-               });
-                Utils().toast(e.toString());
-              }
-              },
-              title: const Text("Verify"))
+          Center(
+            child: RoundButton(
+                Loading: loading,
+                Onpress: () async{
+                  setState(() {
+                    loading=true;
+                  });
+                  final credential = PhoneAuthProvider.credential(verificationId: widget.VerificationID, smsCode: phoneNumberController.text.toString());
+                try {
+                  setState(() {
+                    loading = false;
+                  });
+                  await auth.signInWithCredential(credential);
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const PostScreen()));
+                  
+                } catch (e) {
+                 setState(() {
+                   loading= false;
+                 });
+                  Utils().toast(e.toString());
+                }
+                },
+                title: const Text("Verify",style: TextStyle(color: Colors.white)),
+          )
+          )
         ],
       ),
     );
